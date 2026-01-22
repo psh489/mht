@@ -1,4 +1,3 @@
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8f57ce23-0a7f-4ead-b134-218227fca1d7" /># AWS 네트워크 인프라 구축 실습
 
 ## 📋 실습 과제 답변
 
