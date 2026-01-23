@@ -1,9 +1,9 @@
-name: Deploy to S3 and Sync EC2
+name: Deploy to Service Public EC2
 
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 실행
+      - main  # 지시 사항: main 브랜치에 push될 때 작동
 
 jobs:
   deploy:
@@ -12,13 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Deploy to Service VPC Public EC2
+        uses: appleboy/scp-action@master
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2 # 서울 리전
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "."           # GitHub의 모든 파일
+          target: "/var/www/html" # 89번 서버 배포 경로
+          strip_components: 0
 
-      - name: S3 Sync (Upload)
-        run: |
-          aws s3 sync . s3://psh-app-deploy-bucket-2026 --delete
+      - name: Verify Deployment
+        run: echo "Deployment to Public EC2 completed successfully!"
